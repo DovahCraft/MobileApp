@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'Production.dart';
+import 'Perception.dart';
 import 'dart:collection';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
   runApp(MyApp());
@@ -11,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Tasks Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -38,41 +41,29 @@ class HomeRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Geeks for Geeks'),
+        title: Text('Homepage for Tasks Demo'),
         backgroundColor: Colors.green,
       ),
       body: Center(
-        child: RaisedButton(
-          child: Text('Click Me!'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SecondRoute()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Click Me Page"),
-        backgroundColor: Colors.red,
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UnpopRoute()),
-            );
-          },
-          child: Text('To the unpoppable'),
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Welcome! Please select a lesson to complete.",
+              style: new TextStyle(
+                fontSize: 20.0,
+                color: Colors.blue,
+              ),
+            ),
+            RaisedButton(
+              child: Text('Start Lesson: Task Types Demo'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PerceptionTask()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
