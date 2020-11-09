@@ -281,6 +281,8 @@ class _ProductionTaskState extends State<ProductionTask> {
                 child: Text('Play'),
                 disabledTextColor: Colors.white,
                 disabledColor: Colors.grey.withOpacity(0.5),
+                //If the recording status is stopped, run play, otherwise
+                //Do nothing.
                 onPressed: _recording?.status == RecordingStatus.Stopped
                     ? _play
                     : null,

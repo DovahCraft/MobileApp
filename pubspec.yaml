@@ -32,7 +32,8 @@ dependencies:
   #Estas son para flutter_audio_recorder y almacenando audio en el phone
   flutter_audio_recorder: ^0.5.2
   path_provider:
-  audioplayers:
+  audioplayers: ^0.16.2
+  
 
 dev_dependencies:
   flutter_test:

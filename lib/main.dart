@@ -59,7 +59,9 @@ class HomeRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PerceptionTask()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MultipleChoice(title: "Question 1: Multiple Choice")),
                 );
               },
             ),
