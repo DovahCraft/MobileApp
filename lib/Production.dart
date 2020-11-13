@@ -132,7 +132,7 @@ class _ProductionTaskState extends State<ProductionTask> {
     // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
 
     _recorder = FlutterAudioRecorder(customPath,
-        audioFormat: AudioFormat.AAC, sampleRate: 22050);
+        audioFormat: AudioFormat.WAV, sampleRate: 22050);
     await _recorder.initialized;
   }
 
@@ -217,9 +217,7 @@ class _ProductionTaskState extends State<ProductionTask> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(40.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: <Widget>[
               Text(
                 'File',
@@ -249,10 +247,11 @@ class _ProductionTaskState extends State<ProductionTask> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                'Metering Level - Average Power',
-                style: Theme.of(context).textTheme.headline6,
-              ),
+              //Could be used for future metrics!
+              //Text(
+              //'Metering Level - Average Power',
+              //style: Theme.of(context).textTheme.headline6,
+              //),
               SizedBox(
                 height: 5,
               ),
@@ -270,10 +269,11 @@ class _ProductionTaskState extends State<ProductionTask> {
               SizedBox(
                 height: 5,
               ),
-              Text(
-                '${_recording?.status ?? "-"}',
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
+              //Useful for debugging later
+              // Text(
+              //  '${_recording?.status ?? "-"}',
+              // style: Theme.of(context).textTheme.bodyText2,
+              //),
               SizedBox(
                 height: 20,
               ),
@@ -297,6 +297,15 @@ class _ProductionTaskState extends State<ProductionTask> {
                     .headline6
                     .copyWith(color: Colors.red),
               ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => new HomeRoute()),
+                  );
+                },
+                child: Text('Next Exercise.'),
+              ),
             ],
           ),
         ),
@@ -304,7 +313,8 @@ class _ProductionTaskState extends State<ProductionTask> {
       floatingActionButton: FloatingActionButton(
         onPressed: _opt,
         child: _buttonIcon,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
