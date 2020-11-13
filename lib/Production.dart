@@ -71,6 +71,10 @@ class _ProductionTaskState extends State<ProductionTask> {
   Timer _t;
   Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
   String _alert;
+  String _question = '''Please pronounce the word listed below. Only record 
+  youself saying the presented word. Click Play to review the recording and move
+  on to the next exercise to submit.''';
+  String _word = "apple";
 
   @override
   void initState() {
@@ -80,6 +84,7 @@ class _ProductionTaskState extends State<ProductionTask> {
     });
   }
 
+//Used to control the recording button programmatically.
   void _opt() async {
     switch (_recording.status) {
       case RecordingStatus.Initialized:
@@ -112,6 +117,7 @@ class _ProductionTaskState extends State<ProductionTask> {
     //This grabs the default directory for either IOS or Android
     String customPath = '/flutter_audio_recorder_';
     io.Directory appDocDirectory;
+
     //We have an iOS device
     if (io.Platform.isIOS) {
       appDocDirectory = await getApplicationDocumentsDirectory();
@@ -215,99 +221,117 @@ class _ProductionTaskState extends State<ProductionTask> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: ListView(
-            children: <Widget>[
-              Text(
-                'File',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.path ?? "-"}',
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Duration',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.duration ?? "-"}',
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              //Could be used for future metrics!
-              //Text(
-              //'Metering Level - Average Power',
-              //style: Theme.of(context).textTheme.headline6,
-              //),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${_recording?.metering?.averagePower ?? "--"}',
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Status',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              //Useful for debugging later
-              // Text(
-              //  '${_recording?.status ?? "-"}',
-              // style: Theme.of(context).textTheme.bodyText2,
-              //),
-              SizedBox(
-                height: 20,
-              ),
-              RaisedButton(
-                child: Text('Play'),
-                disabledTextColor: Colors.white,
-                disabledColor: Colors.grey.withOpacity(0.5),
-                //If the recording status is stopped, run play, otherwise
-                //Do nothing.
-                onPressed: _recording?.status == RecordingStatus.Stopped
-                    ? _play
-                    : null,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                '${_alert ?? ""}',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(color: Colors.red),
-              ),
-              RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => new HomeRoute()),
-                  );
-                },
-                child: Text('Next Exercise.'),
-              ),
-            ],
-          ),
+        child: ListView(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    child: Text(_question),
+                    color: Colors.green,
+                    padding: const EdgeInsets.only(
+                        top: 20.0, bottom: 20.0, left: 20.0, right: 20.0),
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Image.asset("assets/images/apple.png",
+                      height: 100, width: 100),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  _word,
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            //Text(
+            //  '${_recording?.path ?? "-"}',
+            //  style: Theme.of(context).textTheme.bodyText2,
+            //),
+            SizedBox(
+              height: 20,
+            ),
+            //Text(
+            //  'Duration',
+            //  style: Theme.of(context).textTheme.headline6,
+            //),
+            SizedBox(
+              height: 5,
+            ),
+            //Text(
+            //  '${_recording?.duration ?? "-"}',
+            //  style: Theme.of(context).textTheme.bodyText2,
+            //),
+            SizedBox(
+              height: 20,
+            ),
+            //Could be used for future metrics!
+            //Text(
+            //'Metering Level - Average Power',
+            //style: Theme.of(context).textTheme.headline6,
+            //),
+            SizedBox(
+              height: 5,
+            ),
+            //Text(
+            //  '${_recording?.metering?.averagePower ?? "--"}',
+            //  style: Theme.of(context).textTheme.bodyText2,
+            //),
+            SizedBox(
+              height: 20,
+            ),
+            //Text(
+            // 'Status',
+            //style: Theme.of(context).textTheme.headline6,
+            // ),
+            SizedBox(
+              height: 5,
+            ),
+            //Useful for debugging later
+            // Text(
+            //  '${_recording?.status ?? "-"}',
+            // style: Theme.of(context).textTheme.bodyText2,
+            //),
+            SizedBox(
+              height: 20,
+            ),
+            RaisedButton(
+              child: Text('Play'),
+              disabledTextColor: Colors.white,
+              disabledColor: Colors.grey.withOpacity(0.5),
+              //If the recording status is stopped, run play, otherwise
+              //Do nothing.
+              onPressed:
+                  _recording?.status == RecordingStatus.Stopped ? _play : null,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              '${_alert ?? ""}',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  .copyWith(color: Colors.red),
+            ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => new HomeRoute()),
+                );
+              },
+              child: Text('Next Exercise.'),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(

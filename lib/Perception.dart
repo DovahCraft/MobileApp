@@ -31,7 +31,7 @@ class _MultipleChoiceState extends State<MultipleChoice> {
   bool pressed = false;
   bool buttonsDisabled = false;
 
-  //Method to play the audio sample.
+  //Method to play the audio sample. Not currently using the method for local asset playback.
   void play() {
     print("Playing Audio");
     //audioPlayer.play("/test.mp3", isLocal: true);
