@@ -141,6 +141,12 @@ class _CoursePageState extends State<CoursePage> {
                   });
                 },
               ),
+              RaisedButton(
+                onPressed: () {
+                  context.read<Authentication>().signOut();
+                },
+                child: Text("Sign out"),
+              ),
             ],
           ),
         ),
