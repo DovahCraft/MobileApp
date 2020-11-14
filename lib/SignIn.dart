@@ -32,6 +32,15 @@ class SignIn extends StatelessWidget {
               );
             },
             child: Text("Sign in"),
+          ),
+          RaisedButton(
+            onPressed: () {
+              context.read<Authentication>().signUp(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+              );
+            },
+            child: Text("Sign Up"),
           )
         ],
       ),
