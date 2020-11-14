@@ -1,39 +1,64 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tasks_demo/Modules.dart';
+import 'package:tasks_demo/authentication.dart';
+import 'package:tasks_demo/SignIn.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 import 'Production.dart';
 import 'Perception.dart';
 import 'dart:collection';
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 
-void main() {
+final firestoreInstance = FirebaseFirestore.instance;
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tasks Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        Provider<Authentication>(
+          create: (_) => Authentication(FirebaseAuth.instance),
+        ),
+        StreamProvider(
+          create: (context) => context.read<Authentication>().authStateChange,
+        )
+      ],
+      child: MaterialApp(
+        title: 'Tasks Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: AuthenticationWrapper(),
       ),
-      home: CoursePage(),
     );
+  }
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
+    if (firebaseUser != null) {
+      return CoursePage();
+    }
+    return SignIn();
   }
 }
 
@@ -106,8 +131,66 @@ class _CoursePageState extends State<CoursePage> {
                   ),
                 ],
               ),
+              RaisedButton(
+                child: Text('Data Retrieval'),
+                onPressed: () {
+                  firestoreInstance.collection("Users").get().then((querySnapshot) {
+                    querySnapshot.docs.forEach((result) {
+                      print(result.data());
+                    });
+                  });
+                },
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Homepage for Tasks Demo'),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Welcome! Please select a lesson to complete.",
+              style: new TextStyle(
+                fontSize: 20.0,
+                color: Colors.blue,
+              ),
+            ),
+            RaisedButton(
+              child: Text('Start Lesson: Task Types Demo'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MultipleChoice(title: "Question 1: Multiple Choice")),
+                );
+              },
+            ),
+
+
+            RaisedButton(
+              child: Text('Data Retrieval'),
+              onPressed: () {
+              firestoreInstance.collection("Users").get().then((querySnapshot) {
+                querySnapshot.docs.forEach((result) {
+                    print(result.data());
+                });
+              });
+              },
+            )
+          ],
         ),
       ),
     );
