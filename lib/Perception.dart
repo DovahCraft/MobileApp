@@ -30,6 +30,8 @@ class _MultipleChoiceState extends State<MultipleChoice> {
   AudioCache audioCache = AudioCache(fixedPlayer: audioPlayer);
   bool pressed = false;
   bool buttonsDisabled = false;
+  String _instruction =
+      "What is the word that is pronounced here? Click play to hear the recording.";
 
   //Method to play the audio sample. Not currently using the method for local asset playback.
   void play() {
@@ -67,129 +69,134 @@ class _MultipleChoiceState extends State<MultipleChoice> {
     BuildContext context,
   ) {
     final key = new GlobalKey<ScaffoldState>();
-    return new Scaffold(
-      key: key,
-      appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.red,
-      ),
-      body: Center(
-        child: ListView(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        key: key,
+        appBar: AppBar(
+          title: Text(widget.title),
+          backgroundColor: Colors.red,
+        ),
+        body: Center(
+          child: ListView(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 4,
+                      child: Container(
+                          child: Text(_instruction),
+                          color: Colors.green,
+                          padding: const EdgeInsets.only(
+                              top: 20.0,
+                              bottom: 20.0,
+                              left: 20.0,
+                              right: 20.0))),
+                  Expanded(
                     flex: 4,
-                    child: Container(
-                        child: Text(
-                            "What is the word that is pronounced here? Click play to hear the recording."),
-                        color: Colors.green,
-                        padding: const EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 20.0, right: 20.0))),
-                Expanded(
-                  flex: 4,
-                  child: Image.asset("assets/images/apple.png",
-                      height: 100, width: 100),
-                ),
-              ],
-            ),
-            SizedBox(height: 100),
-            Row(
-              children: [
-                RaisedButton(
-                  onPressed: () => audioCache.play('apple.m4a'),
-                  child: Icon(Icons.play_arrow),
-                ),
-                RaisedButton(
-                  onPressed: () => audioPlayer.pause(),
-                  child: Icon(Icons.pause),
-                ),
-                RaisedButton(
-                  onPressed: () => audioPlayer.stop(),
-                  child: Icon(Icons.stop),
-                ),
-              ],
-            ),
-            SizedBox(height: 50),
-            //Choice 1 and 2
-            Row(
-              children: [
-                Expanded(
-                  child: RaisedButton(
-                    highlightColor: Colors.green,
-                    color: Colors.blue,
-                    onPressed: () {
-                      key.currentState.showSnackBar(new SnackBar(
-                        content: new Text("Correct"),
-                      ));
-                    },
-                    child: Text('apple'),
+                    child: Image.asset("assets/images/apple.png",
+                        height: 100, width: 100),
                   ),
-                ),
-                SizedBox(width: 30),
-                Expanded(
-                  child: RaisedButton(
-                    highlightColor: Colors.red,
-                    color: Colors.blue,
-                    onPressed: () {
-                      key.currentState.showSnackBar(new SnackBar(
-                        content: new Text("Incorrect"),
-                      ));
-                    },
-                    child: Text('epple'),
+                ],
+              ),
+              SizedBox(height: 100),
+              Row(
+                children: [
+                  RaisedButton(
+                    onPressed: () => audioCache.play('apple.m4a'),
+                    child: Icon(Icons.play_arrow),
                   ),
-                ),
-              ],
-            ),
-            //Choice 3 and 4
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    highlightColor: Colors.red,
-                    color: Colors.blue,
-                    onPressed: () {
-                      key.currentState.showSnackBar(new SnackBar(
-                        content: new Text("Incorrect"),
-                      ));
-                    },
-                    child: Text('appal'),
+                  RaisedButton(
+                    onPressed: () => audioPlayer.pause(),
+                    child: Icon(Icons.pause),
                   ),
-                ),
-                SizedBox(width: 30),
-                Expanded(
-                  child: RaisedButton(
-                    highlightColor: Colors.red,
-                    color: Colors.blue,
-                    onPressed: () {
-                      key.currentState.showSnackBar(new SnackBar(
-                        content: new Text("Incorrect"),
-                      ));
-                    },
-                    child: Text('aple'),
+                  RaisedButton(
+                    onPressed: () => audioPlayer.stop(),
+                    child: Icon(Icons.stop),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 300),
-            //Navigates to the next page.
-            Row(
-              children: [
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => new FreeText(
-                              title: "Question 2: Free Text Question")),
-                    );
-                  },
-                  child: Text('Next Exercise.'),
-                ),
-              ],
-            )
-          ],
+                ],
+              ),
+              SizedBox(height: 50),
+              //Choice 1 and 2
+              Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                      highlightColor: Colors.green,
+                      color: Colors.blue,
+                      onPressed: () {
+                        key.currentState.showSnackBar(new SnackBar(
+                          content: new Text("Correct! Good job! :)"),
+                        ));
+                      },
+                      child: Text('apple'),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  Expanded(
+                    child: RaisedButton(
+                      highlightColor: Colors.red,
+                      color: Colors.blue,
+                      onPressed: () {
+                        key.currentState.showSnackBar(new SnackBar(
+                          content: new Text("Incorrect"),
+                        ));
+                      },
+                      child: Text('epple'),
+                    ),
+                  ),
+                ],
+              ),
+              //Choice 3 and 4
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: RaisedButton(
+                      highlightColor: Colors.red,
+                      color: Colors.blue,
+                      onPressed: () {
+                        key.currentState.showSnackBar(new SnackBar(
+                          content: new Text("Incorrect"),
+                        ));
+                      },
+                      child: Text('appal'),
+                    ),
+                  ),
+                  SizedBox(width: 30),
+                  Expanded(
+                    child: RaisedButton(
+                      highlightColor: Colors.red,
+                      color: Colors.blue,
+                      onPressed: () {
+                        key.currentState.showSnackBar(new SnackBar(
+                          content: new Text("Incorrect"),
+                        ));
+                      },
+                      child: Text('aple'),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 300),
+              //Navigates to the next page.
+              Row(
+                children: [
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => new FreeText(
+                                title: "Question 2: Free Text Question")),
+                      );
+                    },
+                    child: Text('Next Exercise.'),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -337,34 +344,6 @@ class _FreeTextState extends State<FreeText> {
                   )
                 ],
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: TextField(
-              //         controller: _controller,
-              //         onSubmitted: (String value) async {
-              //           await showDialog<void>(
-              //             context: context,
-              //             builder: (BuildContext context) {
-              //               return AlertDialog(
-              //                 title: const Text('Thanks!'),
-              //                 content: Text('You typed "$value".'),
-              //                 actions: <Widget>[
-              //                   FlatButton(
-              //                     onPressed: () {
-              //                       Navigator.pop(context);
-              //                     },
-              //                     child: const Text('OK'),
-              //                   ),
-              //                 ],
-              //               );
-              //             },
-              //           );
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
 
               //Navigates to the next page.
               Row(
@@ -374,7 +353,7 @@ class _FreeTextState extends State<FreeText> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => new ProductionTask(
+                            builder: (context) => new ConstrainedProduction(
                                 title: "Question 3: Production Question")),
                       );
                     },

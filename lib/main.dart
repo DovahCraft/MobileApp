@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasks_demo/Modules.dart';
 import 'Production.dart';
 import 'Perception.dart';
 import 'dart:collection';
@@ -31,41 +32,82 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeRoute(),
+      home: CoursePage(),
     );
   }
 }
 
-class HomeRoute extends StatelessWidget {
+class CoursePage extends StatefulWidget {
+  CoursePage({Key key, this.title}) : super(key: key);
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  _CoursePageState createState() => _CoursePageState();
+}
+
+class _CoursePageState extends State<CoursePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Homepage for Tasks Demo'),
-        backgroundColor: Colors.green,
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Welcome! Please select a lesson to complete.",
-              style: new TextStyle(
-                fontSize: 20.0,
-                color: Colors.blue,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Course Selection Page'),
+          backgroundColor: Colors.green,
+        ),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  "Please select your desired course.",
+                  style: new TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
-            ),
-            RaisedButton(
-              child: Text('Start Lesson: Task Types Demo'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MultipleChoice(title: "Question 1: Multiple Choice")),
-                );
-              },
-            ),
-          ],
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const ListTile(
+                    leading: Icon(Icons.event_note),
+                    title: Text('ENG 400'),
+                    subtitle: Text('Linguistics Analysis.'),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      const SizedBox(width: 3),
+                      TextButton(
+                        child: const Text('START'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ModulePage()),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
