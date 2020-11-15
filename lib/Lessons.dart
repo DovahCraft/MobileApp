@@ -3,15 +3,9 @@ import 'main.dart';
 import 'Perception.dart';
 import 'Production.dart';
 import 'dart:collection';
-import 'dart:io' as io;
-import 'dart:async';
-
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LessonPage extends StatefulWidget {
-  LessonPage({Key key, this.title}) : super(key: key);
+  LessonPage({Key key, this.isOpen}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -22,7 +16,7 @@ class LessonPage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final bool isOpen;
 
   @override
   _LessonPageState createState() => _LessonPageState();
@@ -63,17 +57,20 @@ class _LessonPageState extends State<LessonPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     const SizedBox(width: 3),
+                    //Only enter the lesson if we have not completed it yet.
                     TextButton(
-                      child: const Text('START'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MultipleChoice(
-                                  title: "Question 1: Multiple Choice")),
-                        );
-                      },
-                    ),
+                        child: const Text('START'),
+                        onPressed: widget.isOpen
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MultipleChoice(
+                                          title:
+                                              "Question 1: Multiple Choice")),
+                                );
+                              }
+                            : null),
                     const SizedBox(width: 8),
                   ],
                 ),

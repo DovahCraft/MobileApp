@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tasks_demo/Modules.dart';
 import 'package:tasks_demo/authentication.dart';
@@ -16,14 +16,11 @@ import 'package:flutter/services.dart' show rootBundle;
 
 final firestoreInstance = FirebaseFirestore.instance;
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
-
-
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -134,7 +131,10 @@ class _CoursePageState extends State<CoursePage> {
               RaisedButton(
                 child: Text('Data Retrieval'),
                 onPressed: () {
-                  firestoreInstance.collection("Users").get().then((querySnapshot) {
+                  firestoreInstance
+                      .collection("Users")
+                      .get()
+                      .then((querySnapshot) {
                     querySnapshot.docs.forEach((result) {
                       print(result.data());
                     });
@@ -149,54 +149,6 @@ class _CoursePageState extends State<CoursePage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomeRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Homepage for Tasks Demo'),
-        backgroundColor: Colors.green,
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Welcome! Please select a lesson to complete.",
-              style: new TextStyle(
-                fontSize: 20.0,
-                color: Colors.blue,
-              ),
-            ),
-            RaisedButton(
-              child: Text('Start Lesson: Task Types Demo'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MultipleChoice(title: "Question 1: Multiple Choice")),
-                );
-              },
-            ),
-
-
-            RaisedButton(
-              child: Text('Data Retrieval'),
-              onPressed: () {
-              firestoreInstance.collection("Users").get().then((querySnapshot) {
-                querySnapshot.docs.forEach((result) {
-                    print(result.data());
-                });
-              });
-              },
-            )
-          ],
         ),
       ),
     );
