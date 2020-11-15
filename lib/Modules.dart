@@ -47,33 +47,36 @@ class _ModulePageState extends State<ModulePage> {
                 ),
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+            const ListTile(
+              leading: Icon(Icons.event_note),
+              title: Text('Module 1: Foods'),
+              subtitle: Text('Variety of lessons with a foods theme.'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.event_note),
-                  title: Text('Module 1: Foods'),
-                  subtitle: Text('Variety of lessons with a foods theme.'),
+                const SizedBox(width: 3),
+                TextButton(
+                  child: const Text('OPEN'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LessonPage(isOpen: true)),
+                    );
+                  },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    const SizedBox(width: 3),
-                    TextButton(
-                      child: const Text('START'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LessonPage(isOpen: true)),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                ),
+                const SizedBox(width: 8),
               ],
             ),
+            RaisedButton(
+                child: Text("Home"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CoursePage()),
+                  );
+                }),
           ],
         ),
       ),

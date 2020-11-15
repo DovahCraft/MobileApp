@@ -114,7 +114,7 @@ class _CoursePageState extends State<CoursePage> {
                     children: <Widget>[
                       const SizedBox(width: 3),
                       TextButton(
-                        child: const Text('START'),
+                        child: const Text('OPEN'),
                         onPressed: () {
                           Navigator.push(
                             context,

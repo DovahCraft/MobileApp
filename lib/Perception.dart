@@ -68,7 +68,7 @@ class _MultipleChoiceState extends State<MultipleChoice> {
   ) {
     final key = new GlobalKey<ScaffoldState>();
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => true,
       child: Scaffold(
         key: key,
         appBar: AppBar(
@@ -186,7 +186,7 @@ class _MultipleChoiceState extends State<MultipleChoice> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => new FreeText(
-                                title: "Question 2: Free Text Question")),
+                                title: "Task 3: Free Text Perception")),
                       );
                     },
                     child: Text('Next Exercise.'),
@@ -352,7 +352,7 @@ class _FreeTextState extends State<FreeText> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => new ConstrainedProduction(
-                                title: "Question 3: Production Question")),
+                                title: "Task 4: Constrained Production")),
                       );
                     },
                     child: Text('Next Exercise.'),

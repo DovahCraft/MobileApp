@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasks_demo/Instruction.dart';
 import 'main.dart';
 import 'Perception.dart';
 import 'Production.dart';
@@ -44,38 +45,48 @@ class _LessonPageState extends State<LessonPage> {
                 ),
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+            ListTile(
+              leading: Icon(Icons.event_note),
+              title: Text('Lesson 1: Fruits'),
+              subtitle: Text(
+                  'Mix of perception and production tasks with a fruit theme!'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.event_note),
-                  title: Text('Lesson 1: Fruits'),
-                  subtitle: Text(
-                      'Mix of perception and production tasks with a fruit theme!'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    const SizedBox(width: 3),
-                    //Only enter the lesson if we have not completed it yet.
-                    TextButton(
-                        child: const Text('START'),
-                        onPressed: widget.isOpen
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MultipleChoice(
-                                          title:
-                                              "Question 1: Multiple Choice")),
-                                );
-                              }
-                            : null),
-                    const SizedBox(width: 8),
-                  ],
-                ),
+                const SizedBox(width: 3),
+                //Only enter the lesson if we have not completed it yet.
+                //TODO make this change carry over after we return home!
+                TextButton(
+                    child: widget.isOpen
+                        ? Text('START')
+                        : Text(
+                            'COMPLETED',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold),
+                          ),
+                    onPressed: widget.isOpen
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => InstructionTask(
+                                      title: "Task 1: Instruction Task")),
+                            );
+                          }
+                        : null),
+                const SizedBox(width: 8),
               ],
             ),
+            RaisedButton(
+                child: Text("Home"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CoursePage()),
+                  );
+                }),
           ],
         ),
       ),

@@ -206,11 +206,15 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 50,
+            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   _word,
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ],
             ),
@@ -294,7 +298,7 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
             ),
 
             SizedBox(
-              height: 20,
+              height: 70,
             ),
             // Text(
             //   '${_alert ?? ""}',
@@ -309,7 +313,7 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => new UnconstrainedProduction(
-                          title: "Question 4: Unconstrained Production")),
+                          title: "Task 5: Unconstrained Production")),
                 );
               },
               child: Text('Next Exercise.'),
@@ -564,7 +568,7 @@ class _UnconstrainedProductionState extends State<UnconstrainedProduction> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 50,
             ),
             RaisedButton(
               onPressed: () {
