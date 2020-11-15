@@ -176,7 +176,7 @@ class _MultipleChoiceState extends State<MultipleChoice> {
                   ),
                 ],
               ),
-              SizedBox(height: 300),
+              SizedBox(height: 150),
               //Navigates to the next page.
               Row(
                 children: [

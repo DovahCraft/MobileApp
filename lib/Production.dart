@@ -273,9 +273,10 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
               height: 20,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 30),
                   child: RaisedButton(
                     child: Text('Play'),
                     disabledTextColor: Colors.white,
@@ -288,7 +289,7 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 30),
                   child: RaisedButton(
                     onPressed: _opt,
                     child: _buttonIcon,
@@ -543,10 +544,10 @@ class _UnconstrainedProductionState extends State<UnconstrainedProduction> {
               height: 20,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 30),
                   child: RaisedButton(
                     child: Text('Play'),
                     disabledTextColor: Colors.white,
@@ -559,7 +560,7 @@ class _UnconstrainedProductionState extends State<UnconstrainedProduction> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 30),
                   child: RaisedButton(
                     onPressed: _opt,
                     child: _buttonIcon,
