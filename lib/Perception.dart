@@ -3,9 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'Production.dart';
 import 'Main.dart';
-import 'dart:collection';
-import 'dart:async' show Future;
-import 'package:flutter/services.dart' show rootBundle;
+import 'Lessons.dart';
 
 class MultipleChoice extends StatefulWidget {
   MultipleChoice({Key key, this.title}) : super(key: key);

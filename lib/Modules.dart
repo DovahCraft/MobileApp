@@ -10,7 +10,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ModulePage extends StatefulWidget {
-  ModulePage({Key key, this.title}) : super(key: key);
+  ModulePage({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -20,8 +20,6 @@ class ModulePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
-  final String title;
 
   @override
   _ModulePageState createState() => _ModulePageState();
@@ -66,7 +64,8 @@ class _ModulePageState extends State<ModulePage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LessonPage()),
+                          MaterialPageRoute(
+                              builder: (context) => LessonPage(isOpen: true)),
                         );
                       },
                     ),

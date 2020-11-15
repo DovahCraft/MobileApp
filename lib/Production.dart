@@ -4,6 +4,7 @@ import 'main.dart';
 import 'dart:collection';
 import 'dart:io' as io;
 import 'dart:async';
+import 'Lessons.dart';
 
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -570,7 +571,10 @@ class _UnconstrainedProductionState extends State<UnconstrainedProduction> {
                 if (_recording?.status == RecordingStatus.Stopped) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => new CoursePage()),
+                    MaterialPageRoute(
+                        builder: (context) => new LessonPage(
+                              isOpen: false,
+                            )),
                   );
                 }
               },
