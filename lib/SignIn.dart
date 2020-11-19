@@ -10,41 +10,83 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              labelText: "Email",
-            ),
-          ),
-          TextField(
-            controller: passwordController,
-            decoration: InputDecoration(
-              labelText: "Password",
-            ),
-          ),
-          RaisedButton(
-            onPressed: () {
-              context.read<Authentication>().signIn(
-                email: emailController.text.trim(),
-                password: passwordController.text.trim(),
-              );
-            },
-            child: Text("Sign in"),
-          ),
-          RaisedButton(
-            onPressed: () {
-              context.read<Authentication>().signUp(
-                email: emailController.text.trim(),
-                password: passwordController.text.trim(),
-              );
-            },
-            child: Text("Sign Up"),
-          )
-        ],
-      ),
-    );
+        appBar: AppBar(
+          title: Text('Login Screen '),
+          backgroundColor: Colors.black,
+        ),
+        body: Padding(
+            padding: EdgeInsets.all(10),
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  child: Image.asset('assets/TeamLogo.png'),
+                ),
+                Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Smart-Talk',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30),
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                  ),
+                ),
+                Text(""),
+                Text(""),
+                Container(
+                    height: 50,
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.black,
+                      child: Text('Login'),
+                      onPressed: () {
+                        context.read<Authentication>().signIn(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        );
+                      },
+                    )),
+                Text(""),
+                Container(
+                    height: 50,
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.black,
+                      child: Text('Sign Up'),
+                      onPressed: () {
+                        context.read<Authentication>().signUp(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        );
+                      },
+                    )),
+              ],
+            )));
   }
 }
 

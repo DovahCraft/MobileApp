@@ -131,14 +131,8 @@ class _CoursePageState extends State<CoursePage> {
               RaisedButton(
                 child: Text('Data Retrieval'),
                 onPressed: () {
-                  firestoreInstance
-                      .collection("Users")
-                      .get()
-                      .then((querySnapshot) {
-                    querySnapshot.docs.forEach((result) {
-                      print(result.data());
-                    });
-                  });
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => new dbStuff()));
                 },
               ),
               RaisedButton(
@@ -236,6 +230,57 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+
+class dbStuff extends StatelessWidget {
+  String dog;
+  final TextEditingController dataController = TextEditingController();
+  final firestoreInstance = FirebaseFirestore.instance;
+  var firebaseUser =  FirebaseAuth.instance.currentUser;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: Text('Database Example')),
+        body:
+        Center(
+            child:
+            Column(
+                children: <Widget>[
+                  TextField(
+                    controller: dataController,
+                    decoration: InputDecoration(
+                      labelText: "Enter Text",
+                    ),
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      firestoreInstance.collection("Users").doc(firebaseUser.uid).set(
+                          {
+                            "name" : dataController.text.trim(),
+                          }).then((_){
+                        print("sent?");
+                      });
+
+                    },
+                    child: Text("Send to Database"),
+                  ),
+
+                  new StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection('Users').doc(firebaseUser.uid).snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return new Text("Loading");
+                        }
+                        var userDocument = snapshot.data;
+                        return new Text(userDocument["name"]);
+                      }
+                  )
+                ]
+            )
+        )
     );
   }
 }
