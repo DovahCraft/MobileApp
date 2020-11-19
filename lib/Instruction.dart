@@ -130,7 +130,7 @@ class _InstructionTaskState extends State<InstructionTask> {
                   Image.asset("assets/images/kiwi.jpg", height: 75, width: 75),
                 ],
               ),
-              SizedBox(height: 100),
+              SizedBox(height: 65),
 
               //Navigates to the next page.
               Row(
