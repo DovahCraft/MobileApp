@@ -84,7 +84,8 @@ class _LessonPageState extends State<LessonPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CoursePage()),
+                    MaterialPageRoute(
+                        builder: (context) => AuthenticationWrapper()),
                   );
                 }),
           ],

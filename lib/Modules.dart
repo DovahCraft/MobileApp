@@ -74,7 +74,8 @@ class _ModulePageState extends State<ModulePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CoursePage()),
+                    MaterialPageRoute(
+                        builder: (context) => AuthenticationWrapper()),
                   );
                 }),
           ],
