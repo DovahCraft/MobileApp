@@ -487,7 +487,6 @@ class _VideoTaskState extends State<VideoTask> {
                   ),
                 ],
               ),
-              SizedBox(height: 100),
               YoutubePlayer(
                 controller: _controller,
                 showVideoProgressIndicator: true,

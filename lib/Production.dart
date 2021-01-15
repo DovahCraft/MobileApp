@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'main.dart';
@@ -31,6 +35,10 @@ class ConstrainedProduction extends StatefulWidget {
 
 //Credit for this widget goes to the flutter_audio_recorder team.
 class _ConstrainedProductionState extends State<ConstrainedProduction> {
+  //Firebase storage variables
+  firebase_storage.Reference ref =
+      firebase_storage.FirebaseStorage.instance.ref();
+
   FlutterAudioRecorder _recorder;
   Recording _recording;
   Timer _t;
@@ -40,6 +48,8 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
   youself saying the presented word. Click Play to review the recording and move
   on to the next exercise to submit.''';
   String _word = "apple";
+  String imagePath; //= "assets/images/apple.png";
+  int attemptCount = 0;
 
   @override
   void initState() {
@@ -47,136 +57,6 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
     Future.microtask(() {
       _prepare();
     });
-  }
-
-//Used to control the recording button programmatically.
-  void _opt() async {
-    switch (_recording.status) {
-      case RecordingStatus.Initialized:
-        {
-          await _startRecording();
-          break;
-        }
-      case RecordingStatus.Recording:
-        {
-          await _stopRecording();
-          break;
-        }
-      case RecordingStatus.Stopped:
-        {
-          await _prepare();
-          break;
-        }
-
-      default:
-        break;
-    }
-
-    // 刷新按钮 (Refresh Button)
-    setState(() {
-      _buttonIcon = _playerIcon(_recording.status);
-    });
-  }
-
-  Future _init() async {
-    //This grabs the default directory for either IOS or Android
-    String customPath = '/flutter_audio_recorder_';
-    io.Directory appDocDirectory;
-
-    //We have an iOS device
-    if (io.Platform.isIOS) {
-      appDocDirectory = await getApplicationDocumentsDirectory();
-    }
-    //Grab the default directory of the android device.
-    else {
-      appDocDirectory = await getExternalStorageDirectory();
-    }
-
-    // can add extension like ".mp4" ".wav" ".m4a" ".aac"
-    customPath = appDocDirectory.path +
-        customPath +
-        DateTime.now().millisecondsSinceEpoch.toString() +
-        ".wav";
-
-    // .wav <---> AudioFormat.WAV
-    // .mp4 .m4a .aac <---> AudioFormat.AAC
-    // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
-
-    _recorder = FlutterAudioRecorder(customPath,
-        audioFormat: AudioFormat.WAV, sampleRate: 22050);
-    await _recorder.initialized;
-  }
-
-  Future _prepare() async {
-    var hasPermission = await FlutterAudioRecorder.hasPermissions;
-    if (hasPermission) {
-      await _init();
-      var result = await _recorder.current();
-      setState(() {
-        _recording = result;
-        _buttonIcon = _playerIcon(_recording.status);
-        _alert = "";
-      });
-    } else {
-      setState(() {
-        _alert = "Permission Required.";
-      });
-    }
-  }
-
-  Future _startRecording() async {
-    await _recorder.start();
-    var current = await _recorder.current();
-    setState(() {
-      _recording = current;
-    });
-
-    //This updates the timer for some reason, not too sure, doesnt increment duration during recording if removed.
-    _t = Timer.periodic(Duration(milliseconds: 10), (Timer t) async {
-      var current = await _recorder.current();
-      setState(() {
-        _recording = current;
-        _t = t;
-      });
-    });
-  }
-
-  Future _stopRecording() async {
-    var result = await _recorder.stop();
-    _t.cancel();
-
-    setState(() {
-      _recording = result;
-    });
-  }
-
-  void _play() {
-    AudioPlayer player = AudioPlayer();
-    player.play(_recording.path, isLocal: true);
-  }
-
-//This case statement sets the image of the recording icon based on the current state of the app.
-  Widget _playerIcon(RecordingStatus status) {
-    switch (status) {
-      case RecordingStatus.Initialized:
-        {
-          //Which is the regular dot recording button
-          return Text("Record");
-        }
-      case RecordingStatus.Recording:
-        {
-          //Which is the standard stop recording icon
-          return Text("Stop Record");
-        }
-      case RecordingStatus.Stopped:
-        {
-          //After we stop, show the arrow to replay.
-          return Text("Retry?");
-        }
-      //This is if nothing else works and something really is weird.
-      default:
-        return Text("Record debug");
-    }
   }
 
   @override
@@ -188,24 +68,23 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    child: Text(_instruction),
-                    color: Colors.green,
-                    padding: const EdgeInsets.only(
-                        top: 20.0, bottom: 20.0, left: 20.0, right: 20.0),
-                  ),
+            Row(children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: Container(
+                  child: Text(_instruction),
+                  color: Colors.green,
+                  padding: const EdgeInsets.only(
+                      top: 20.0, bottom: 20.0, left: 20.0, right: 20.0),
                 ),
-                Expanded(
-                  flex: 4,
-                  child: Image.asset("assets/images/apple.png",
-                      height: 100, width: 100),
-                ),
-              ],
-            ),
+              ),
+              (imagePath != null)
+                  ? Expanded(
+                      flex: 4,
+                      child: Image.asset(imagePath, height: 100, width: 100),
+                    )
+                  : Container()
+            ]),
             SizedBox(
               height: 50,
             ),
@@ -324,6 +203,157 @@ class _ConstrainedProductionState extends State<ConstrainedProduction> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  //Used to control the recording button programmatically.
+  void _opt() async {
+    switch (_recording.status) {
+      case RecordingStatus.Initialized:
+        {
+          await _startRecording();
+          break;
+        }
+      case RecordingStatus.Recording:
+        {
+          await _stopRecording();
+          break;
+        }
+      case RecordingStatus.Stopped:
+        {
+          await _prepare();
+          break;
+        }
+
+      default:
+        break;
+    }
+
+    // 刷新按钮 (Refresh Button)
+    setState(() {
+      _buttonIcon = _playerIcon(_recording.status);
+    });
+  }
+
+  Future _init() async {
+    //This grabs the default directory for either IOS or Android
+    String customPath = '/flutter_audio_recorder_';
+    io.Directory appDocDirectory;
+
+    //We have an iOS device
+    if (io.Platform.isIOS) {
+      appDocDirectory = await getApplicationDocumentsDirectory();
+    }
+    //Grab the default directory of the android device.
+    else {
+      appDocDirectory = await getExternalStorageDirectory();
+    }
+
+    // can add extension like ".mp4" ".wav" ".m4a" ".aac"
+    customPath = appDocDirectory.path +
+        customPath +
+        DateTime.now().millisecondsSinceEpoch.toString() +
+        ".wav";
+
+    // .wav <---> AudioFormat.WAV
+    // .mp4 .m4a .aac <---> AudioFormat.AAC
+    // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
+
+    _recorder = FlutterAudioRecorder(customPath,
+        audioFormat: AudioFormat.WAV, sampleRate: 22050);
+    await _recorder.initialized;
+  }
+
+  Future _prepare() async {
+    var hasPermission = await FlutterAudioRecorder.hasPermissions;
+    if (hasPermission) {
+      await _init();
+      var result = await _recorder.current();
+      setState(() {
+        _recording = result;
+        _buttonIcon = _playerIcon(_recording.status);
+        _alert = "";
+      });
+    } else {
+      setState(() {
+        _alert = "Permission Required.";
+      });
+    }
+  }
+
+  Future _startRecording() async {
+    await _recorder.start();
+    var current = await _recorder.current();
+    setState(() {
+      _recording = current;
+    });
+
+    //This updates the timer for some reason, not too sure, doesnt increment duration during recording if removed.
+    _t = Timer.periodic(Duration(milliseconds: 10), (Timer t) async {
+      var current = await _recorder.current();
+      setState(() {
+        _recording = current;
+        _t = t;
+      });
+    });
+  }
+
+  Future _stopRecording() async {
+    var result = await _recorder.stop();
+    _t.cancel();
+
+    setState(() {
+      _recording = result;
+    });
+    //Upload our recording straight to Firebase Cloud storage on each attempt
+    uploadFile(_recording.path);
+    //Increment the attempt counter
+    attemptCount++;
+  }
+
+  void _play() {
+    AudioPlayer player = AudioPlayer();
+    player.play(_recording.path, isLocal: true);
+    print(_recording.path);
+    print("File name" + _recording.path.split("/").last);
+  }
+
+//This case statement sets the image of the recording icon based on the current state of the app.
+  Widget _playerIcon(RecordingStatus status) {
+    switch (status) {
+      case RecordingStatus.Initialized:
+        {
+          //Which is the regular dot recording button
+          return Text("Record");
+        }
+      case RecordingStatus.Recording:
+        {
+          //Which is the standard stop recording icon
+          return Text("Stop Record");
+        }
+      case RecordingStatus.Stopped:
+        {
+          //After we stop, show the arrow to replay.
+          return Text("Retry?");
+        }
+      //This is if nothing else works and something really is weird.
+      default:
+        return Text("Record debug");
+    }
+  }
+}
+
+//Cloud Firestore audio upload method.
+Future<void> uploadFile(String filePath) async {
+  File file = File(filePath);
+  String fileName = filePath.split("/").last;
+
+  try {
+    //Keep it simple for right now, upload to root by leaving .ref() empty.
+    await firebase_storage.FirebaseStorage.instance
+        .ref("learneraudio/" + fileName)
+        .putFile(file);
+  } on Exception catch (_) {
+    print('File upload failed!');
   }
 }
 

@@ -8,6 +8,7 @@ import 'package:tasks_demo/SignIn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks_demo/dbdemos.dart';
 import 'Production.dart';
 import 'Perception.dart';
 import 'dart:collection';
@@ -235,53 +236,72 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
 class dbStuff extends StatelessWidget {
-  String dog;
   final TextEditingController dataController = TextEditingController();
   final firestoreInstance = FirebaseFirestore.instance;
-  var firebaseUser =  FirebaseAuth.instance.currentUser;
+  var firebaseUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Database Example')),
-        body:
-        Center(
-            child:
-            Column(
-                children: <Widget>[
-                  TextField(
-                    controller: dataController,
-                    decoration: InputDecoration(
-                      labelText: "Enter Text",
-                    ),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      firestoreInstance.collection("Users").doc(firebaseUser.uid).set(
-                          {
-                            "name" : dataController.text.trim(),
-                          }).then((_){
-                        print("sent?");
-                      });
+        body: Center(
+            child: Column(children: <Widget>[
+          TextField(
+            controller: dataController,
+            decoration: InputDecoration(
+              labelText: "Enter Text",
+            ),
+          ),
+          /*RaisedButton(
+            onPressed: () {
+              firestoreInstance.collection("Users").doc(firebaseUser.uid).set({
+                "name": dataController.text.trim(),
+                "courses": "ENG 400",
+              }).then((_) {
+                print("sent?");
+              });
+            },
+            child: Text("Send to Database"),
+          ),*/
+          //StreamBuilder recieves the database response snapshot and allows us to extract data.
+          new StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(firebaseUser.uid)
+                  .collection('Courses')
+                  .doc('Pxf1m0evwkzcJ1eqhilk')
+                  .collection('Modules')
+                  .doc('EzyTy0O98VGC1cYS85Iy')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return new Text("Loading");
+                }
+                var userDocument = snapshot.data;
+                return new Text("ModuleName: " + userDocument["name"] + "\n");
+              }),
 
-                    },
-                    child: Text("Send to Database"),
-                  ),
-
-                  new StreamBuilder(
-                      stream: FirebaseFirestore.instance.collection('Users').doc(firebaseUser.uid).snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return new Text("Loading");
-                        }
-                        var userDocument = snapshot.data;
-                        return new Text(userDocument["name"]);
-                      }
-                  )
-                ]
-            )
-        )
-    );
+          /*   new StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('Lessons')
+                  .doc("Foods")
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return new Text("Loading");
+                }
+                var lessonDocument = snapshot.data;
+                return new Text("Lessons: " + lessonDocument["Name"]);
+              }),*/
+          //Navigate to the list detail demo page.
+          RaisedButton(
+            child: Text("Demos page"),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ListDetailDemo(title: "List Detail")),
+            ),
+          )
+        ])));
   }
 }
